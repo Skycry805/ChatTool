@@ -1,6 +1,6 @@
-# Distributed Systems - Chat
+# Chat Support - Distributed Systems - Chat
 
-![alt text](https://github.com/[username]/[reponame]/blob/[branch]/misc/chat_support_logo.png?raw=true)
+![Chat Support](https://github.com/Skycry805/ChatTool/blob/master/misc/chat_support_logo.png?raw=true)
 
 Innovative chat tool with AI integration.
 
