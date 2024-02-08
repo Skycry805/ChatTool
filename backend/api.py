@@ -4,10 +4,17 @@ from flask_cors import CORS
 import json
 import sys
 from flasgger import Swagger
+from werkzeug.middleware.proxy_fix import ProxyFix
 
 chat = Flask(__name__)
 swagger = Swagger(chat)
 CORS(chat)
+
+# Fix for Proxy
+# https://flask.palletsprojects.com/en/3.0.x/deploying/proxy_fix/
+chat.wsgi_app = ProxyFix(
+    chat.wsgi_app, x_for=1, x_proto=1, x_host=1, x_prefix=1
+)
 
 @chat.route('/send_message_to_server', methods=['POST'])
 def receive_message():
