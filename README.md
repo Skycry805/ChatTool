@@ -1,5 +1,8 @@
 # Distributed Systems - Chat
-Chat tool with AI integration.
+
+![alt text](https://github.com/[username]/[reponame]/blob/[branch]/misc/chat_support_logo.png?raw=true)
+
+Innovative chat tool with AI integration.
 
 ## Installation
 
