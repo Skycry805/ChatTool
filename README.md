@@ -20,6 +20,9 @@ usermod -a -G docker john
 ```
 "john" is an example. To use docker commands, it is sometimes nessasary to reload your shell.
 
+### Configure external API-Key
+
+
 ### Build and run
 
 ```

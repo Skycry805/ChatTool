@@ -1,1 +1,8 @@
+__pycache__
+config.py
+.coverage
+coverage
+unittest/coverage
+External_dummy.py
+
 config.py
