@@ -8,8 +8,8 @@ export default defineConfig({
 
   server: {
     proxy: {
-      '/send_message_to_server': {
-        target: '127.0.0.1:5000',
+      '/api': {
+        target: 'https://chat.niclas-sieveneck.de',
         changeOrigin: true,
       }
     }
