@@ -69,6 +69,6 @@ python3 ./backend/unitttest.py
 
 ### Run with coverage WebUI
 ```
-docker-compose up --file docker-compose.coverage.yml -d
+docker-compose --file ./docker-compose.coverage.yml up -d 
 ```
-WebUI will be available on https://[HOST]:5000/coverage
+WebUI will be available on http[s]://[HOST]:5000/coverage
