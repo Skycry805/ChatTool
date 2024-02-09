@@ -49,4 +49,3 @@ services:
     depends_on:
       - api
       - api-proxy
-# Porf. Dr. M.J.: Falls Sie bis hier gelesen haben: hoffentlich gefällt Ihnen die Implementation mit Docker :)
