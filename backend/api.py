@@ -1,10 +1,14 @@
+import sys
 
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import json
-import sys
+import copy
+
 from flasgger import Swagger
 from werkzeug.middleware.proxy_fix import ProxyFix
+
+import external
 
 chat = Flask(__name__)
 swagger = Swagger(chat)
@@ -16,63 +20,121 @@ chat.wsgi_app = ProxyFix(
     chat.wsgi_app, x_for=1, x_proto=1, x_host=1, x_prefix=1
 )
 
-@chat.route('/send_message_to_server', methods=['POST'])
+messages_to_send = {}
+language_list = ['en'] 
+message_ID = 0
+
+@chat.route('/send_message', methods=['POST'])
 def receive_message():
-    """
-    Test mit viel SWAG, Tööörnup
-    ---
-    parameters:
-      - name: name
-        in: path
-        type: json
-        required: true
-        description: TEEST 123.
-    responses:
-        200:
-           description: TEST undso....
-    """
+
+    global message_ID
+    
+    print ("Message ID:", message_ID)
+    local_m_ID = message_ID + 1
+    received_message = {}
 
     json_data = request.get_json()
+    build_message (json_data, local_m_ID)
 
 
-
+    print(json_data)
+    #Debug Output for test
     message = json_data.get('message')
-    name = json_data.get('name')
+    sender = json_data.get('name')
     language = json_data.get('language')
+    print(f"Received message: {message}, Sender: {sender}, Language: {language}")
 
-    print(f"Received message: {message}, Sender: {name}, Language: {language}")
+    if json_data.get('bot'):
+        answer = askBot(json_data.get('message'),json_data.get('language'))
+        local_m_ID = local_m_ID + 1
+        build_message (answer, local_m_ID)
 
-    #message_add(message: {message}, Sender: {sender}, Language: {language}
-
-
+    
+    print(f"Received message: {json_data['message']}, Sender: {json_data['name']}, Language: {json_data['language']}")
+    message_ID = message_ID + 1 
+    received_message[message_ID] = json_data
 
     response = {"status": "Message received successfully"}
     return jsonify(response), 200
 
+#builds a message that can be send to the user
+def build_message (receive_message, m_ID: int):
+    global messages_to_send
+
+    message = receive_message.get('message')
+    sender = receive_message.get('name')
+    source_lang = receive_message.get('language')
+
+    add_new_language(source_lang)
+
+    translated_messages = {}
+    translated_messages[source_lang] = message
+
+    for target_lang in language_list:
+        translation = translate_message(source_lang, target_lang, message)
+        print ("Empfangene Übersetzung", translation)
+        translated_messages[target_lang]=translation
+        print ("Gespeicherte Übersetzung", translated_messages)
 
 
-@chat.route('/hello')
-def hello():
-    return "Hallo von der API"
+    sentiment = external.sentiment(translated_messages['en'])
+
+    builed_message = {'message':translated_messages, 'sender':sender, 'sentiment':sentiment}
+    print("Builded Messages:", builed_message)
+    messages_to_send[m_ID] = builed_message
+    print("Added Messages:", messages_to_send)
+
+#Sending message to ChatBot and returns the answer
+def askBot (message: str, lang: str) -> str:
+    answer = external.llm(message)
+    output = {'Sender': 'Bob der Bot', 'Message': answer, 'Language': lang}
+    return output
+    
+
+#Add new User Language
+def add_new_language(language: str):
+    global language_list
+    if language not in language_list:
+        language_list.append(language)
+
+def translate_message(source_lang: str, target_lang: str, message: str) -> str:
+    translated_message = external.translate(source_lang, target_lang, message)
+    print("Übersetzte Nachricht:", translated_message)
+    return translated_message
 
 
- 
+@chat.route('/update_message/<int:msg_id>', methods=['POST'])
+def send_message(msg_id):
 
-@chat.route('/update_message', methods=['POST'])
-def send_message():
+    global messages_to_send, message_ID
+    print("Messages:", messages_to_send)
+    print("ID vom CLient", msg_id)
 
-    message = 'Mir gehts gut'
-    sender = 'Server'
-    language = 'de'
-    sentiment = 'happy'
+    local_all_messages = copy.deepcopy(messages_to_send)
+    print("Messages:", local_all_messages)
+
+    print("Test der Ausgabe:", local_all_messages[msg_id]) 
+    local_message_ID = message_ID
+    send_data = {}
+
+    while msg_id <= local_message_ID:
+        send_data[msg_id] = local_all_messages[msg_id]
+        msg_id +=1
+
+    print("Sending message:", send_data)
+    #build json for export
+    response = json.loads(json.dumps(send_data, ensure_ascii=False))
+    print (response)  
+    #return json
+    return jsonify(response), 200
 
 
+@chat.route('/message_id', methods=['POST'])
+def send_message_ID():
 
+    global message_ID
     #get message from database
-    send_data = {'message': message,
-                'sender': sender,
-                'language': language,
-                'sentiment': sentiment}
+    send_data = {'message_ID': message_ID}
 
 
     print(f"Sending message: {send_data}")
@@ -84,13 +146,14 @@ def send_message():
     #return json
     return jsonify(response), 200
 
+
 if __name__ == '__main__':
     # Disable debug, when deployed in a container, for production use
-    debug = False
+    debug = True #######################################################################################################
     if len( sys.argv ) > 1:
         first_arg = str(sys.argv[1])
         if first_arg.lower() == "debug":
             debug=True
             print("Debug enabled!")
 
-    chat.run(host='0.0.0.0', port=5000,debug=debug)
+    chat.run(host='0.0.0.0', port=5000,debug=debug) ##################################################

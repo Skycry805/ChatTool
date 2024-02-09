@@ -8,8 +8,8 @@ import sys
 import os
 
 # Add project root to path
-scPath = os.path.dirname(os.path.realpath(__file__))
-sys.path.append(scPath)
+sc_path = os.path.dirname(os.path.realpath(__file__))
+sys.path.append(sc_path)
 
 print("Start Coverage")
 # Ignore this file and dummy files
@@ -19,8 +19,9 @@ cov.start()
 
 # Import custom modules
 import external
-
-class Unittest_External(unittest.TestCase):
+import api
+####################################################################################################################
+class UnittestExternal(unittest.TestCase):
 
     def test_json_select(self):
         json_element = {"Test1": {"Test2": "foo"}}
@@ -96,6 +97,27 @@ class Unittest_External(unittest.TestCase):
         output = external.sentiment("Good")
         self.assertIsNotNone(output)
         self.assertIsInstance(output, str)
+
+# Test for api by using external class, neat
+class UnittestApi(): #unittest.TestCase):
+
+    header = {
+            "User-Agent": "VS-Chat/1.0.0",
+            "Content-Type": "application/json"
+            }
+    
+    base_url = "http://127.0.0.1:5000/"
+
+    def test_send_message(self):
+
+        url = self.base_url + "send_message"
+
+        msg = {"message": "TEST", "Name": "foo", "language": "de"}
+
+        req = external.send_request(url, self.header, msg)
+
+        self.assertEqual(req, {"status": "Message received successfully"})
+
 
 # Fix for not closing coverage propperly
 def additional_code():

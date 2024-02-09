@@ -16,21 +16,26 @@ def json_select(json_element: json, path: list) -> str:
     return json_element
 
 # send a request
-def send_request(url: str, header: list, data, filter=None):
+def send_request(url: str, header: list, data=None, filter=None):
     
     # Build data
-    if "Content-Type" in header:
+    if "Content-Type" in header or data == None:
         if header["Content-Type"].lower() == "application/json":
             data = json.loads(json.dumps(data, ensure_ascii=False))
-            request_parameter = {'url': url, 'headers': header, 'json': data}
+            request_parameter = {'url': url, 
+                                'headers': header, 
+                                'json': data}
         else:
-            # Any format
-            request_parameter = {'url': url, 'headers': header, 'data': data}
+            # Only post data
+            request_parameter = {'url': url, 
+                                 'headers': header, 
+                                 'data': data}
         print("Outgoing Data: ")
         print(data)
     else:
         # No Data to API
-        request_parameter = {'url': url, 'headers': header}
+        request_parameter = {'url': url, 
+                             'headers': header}
 
     try:
         response = requests.post(**request_parameter)
@@ -42,7 +47,6 @@ def send_request(url: str, header: list, data, filter=None):
     if response.status_code == 200:  
         # Error handling for non-JSON ourput
         try:
-            json_data = response.json()
             print("Json Output: ")
             print(response.json())
             # Get string from json attribute
@@ -76,8 +80,15 @@ def translate(source_lang: str, target_lang: str, text: str) -> str:
 # LLM GPT
 def llm(input: str, system_content=config.llm['system_content']) -> str:
     # build data
-    dict_data = {"model": config.llm['model'], "messages": [ {"role": "system", "content": system_content}, {"role": "user", "content": input}]}
-    filter = ['choices', 0, 'message', 'content']
+    dict_data = {"model": config.llm['model'], 
+                 "messages": [ {"role": "system", 
+                                "content": system_content}, 
+                                {"role": "user", 
+                                 "content": input}]}
+    filter = ['choices', 
+              0, 
+              'message', 
+              'content']
     # Build request
     return send_request(config.llm['url'], config.llm_header, dict_data, filter)
 

@@ -44,8 +44,6 @@ services:
       - ./frontend/nginx.conf:/etc/nginx/conf.d/default.conf
       - ./cert/fullchain.pem:/etc/ssl/fullchain.pem
       - ./cert/privkey.pem:/etc/ssl/privkey.pem
-    ### for testing:
-    #  - ../frontend:/usr/share/nginx/html
     depends_on:
       - api
       - api-proxy
