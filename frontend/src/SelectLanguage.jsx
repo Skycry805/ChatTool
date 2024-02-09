@@ -4,7 +4,6 @@ import { Dropdown} from 'react-bootstrap';
 const SelectLanguage = ({
     handleSelect,
     selectedValue,
-    setSelectedValue,
     handleButtonClick
     
 
@@ -29,8 +28,6 @@ const SelectLanguage = ({
     </Dropdown>
     );
 };
-
-
 
 
 export default SelectLanguage;
