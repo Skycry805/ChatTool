@@ -58,3 +58,17 @@ docker-compose up -d
 ```
 docker-compose up -d
 ```
+
+## Test
+
+### Backend
+Run coverage 
+```
+python3 ./backend/unitttest.py
+```
+
+### Run with coverage WebUI
+```
+docker-compose up --file docker-compose.coverage.yml -d
+```
+WebUI will be available on https://[HOST]:5000/coverage

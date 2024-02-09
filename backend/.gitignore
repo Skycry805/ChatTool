@@ -4,5 +4,4 @@ config.py
 coverage
 unittest/coverage
 External_dummy.py
-
 config.py
