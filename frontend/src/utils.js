@@ -1,5 +1,5 @@
 let messageID = 0;
-let serverUrl = 'https://chat.niclas-sieveneck.de:5000';
+let serverUrl = 'http://127.0.0.1:5000';
 
   //Sending Message to Server
 export const sendMessage = async (jsonMessage) => {
@@ -28,8 +28,9 @@ export const reciveMessage = async () => {
   let output = ''; 
   console.log("My messageID:", messageID);
   const result = await checkNewMessage(messageID)
+  console.log("Server messageID:", messageID);
       if (result > messageID) {
-        messageID = result;
+        messageID++;
       try {
         const msg_id = messageID;
         const response = await fetch(`${serverUrl}/update_message/${msg_id}`,{
@@ -70,6 +71,7 @@ export const reciveMessage = async () => {
       .then((response) => response.json())
       .then(data => {
         output = data.message_id;
+        console.log('Output from Server:', data)
     })
     return (output);
     }      

@@ -12,9 +12,9 @@ import BotBob from './BotBob.jsx';
 function App() {
   
   //safes the Username
-  const [name, setName] = useState('');
+  const [sender, setSender] = useState('');
   //Allows to set Username
-  const [nameConfirmed, setNameConfirmed] = useState(false);
+  const [senderConfirmed, setSenderConfirmed] = useState(false);
   //safes the language
   const [language, setLanguage] = useState('en');
   //Allows User to change Language
@@ -29,9 +29,9 @@ function App() {
   const [bob, setBob] = useState(false);
 
   //Wait for Name and Language to be set
-  const handleNameConfirmation = () => {
-    if (name.trim() !== '') {
-      setNameConfirmed(true);
+  const handleSenderConfirmation = () => {
+    if (sender.trim() !== '') {
+      setSenderConfirmed(true);
     }
   };
   const handleLanguageSelect = (lang) => {
@@ -41,7 +41,7 @@ function App() {
     if (language.trim() !== '') {
     setLanguage(lang);
     setLanguageSelected(true);
-    console.log(nameConfirmed)
+    console.log(senderConfirmed)
     }
   }
 
@@ -51,11 +51,11 @@ function App() {
 
 //Sends message to server
   const handleSendMessage = async () => {
-    console.log(`Name:`, name, `Message:`, message, `Language:`, language, `Bob:`, bob);
+    console.log(`sender:`, sender, `Message:`, message, `Language:`, language, `Bob:`, bob);
     setMessage('');
 
     const preJsonMessage = {
-      name: name,
+      sender: sender,
       language: language,
       message: message,
       bob: bob
@@ -120,16 +120,16 @@ function App() {
         </div>
       </Row>
 
-        {!nameConfirmed || !languageSelected ? (
+        {!senderConfirmed || !languageSelected ? (
             <Row>
               <Col>
-                <p id={'username'}>Ihr Name: {name} </p>
+                <p id={'username'}>Ihr Name: {sender} </p>
                 <p id={'standardLanguage'}>Aktuelle Sprache: {language} </p>
                 <InputField
-                  value={name}
-                  setValue={setName}
+                  value={sender}
+                  setValue={setSender}
                   placeholder={'Bitte geben Sie ihren Namen ein'}
-                  handleButtonClick={handleNameConfirmation}
+                  handleButtonClick={handleSenderConfirmation}
                   buttonText={'Namen bestätigen'}
                 />
                 <SelectLanguage
@@ -142,7 +142,7 @@ function App() {
         ) : (
           <Row>
             <Col>
-            <p id={'username'}>Ihr Name: {name} </p>
+            <p id={'username'}>Ihr Name: {sender} </p>
                 <p id={'selectedLanguage'}>Ihre ausgewählte Sprache: {language} </p>
                  <InputField
                     value={message}

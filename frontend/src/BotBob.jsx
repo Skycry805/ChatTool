@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
 
-const BotBob = () => {
+const BotBob = ({
+ setBotBob,
+        }) => {
   const [buttonColor, setButtonColor] = useState('black');
 
   const handleButtonClick = () => {
     setButtonColor('green');
+    setBotBob(true);
   };
   return (
     <button
