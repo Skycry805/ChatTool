@@ -19,7 +19,7 @@ You can also install the latest version of docker by unsing the official documen
 Add your user to the docker group:
 
 ```
-usermod -a -G docker john
+sudo usermod -a -G docker john
 ```
 "john" is an example. To use docker commands, it is sometimes nessasary to reload your shell.
 
