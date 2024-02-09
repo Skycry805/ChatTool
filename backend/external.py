@@ -1,4 +1,4 @@
-# External requests - v1.0 - Niclas Sieveneck
+# External requests - v1.0
 
 import requests
 import json
@@ -14,6 +14,7 @@ def json_select(json_element: json, path: list) -> str:
             print(e)
             return None
     return json_element
+
 
 # send a request
 def send_request(url: str, header: list, data=None, filter=None):
@@ -64,6 +65,7 @@ def send_request(url: str, header: list, data=None, filter=None):
         #print(response.text)
         return None
 
+
 # translate via deepL
 def translate(source_lang: str, target_lang: str, text: str) -> str:
     # Save Api cost for debug, if source=target language
@@ -76,6 +78,7 @@ def translate(source_lang: str, target_lang: str, text: str) -> str:
     filter = ['translations', 0, 'text']
     # Build request
     return send_request(config.translate['url'], config.translate_header, dict_data, filter)
+
 
 # LLM GPT
 def llm(input: str, system_content=config.llm['system_content']) -> str:
@@ -91,6 +94,7 @@ def llm(input: str, system_content=config.llm['system_content']) -> str:
               'content']
     # Build request
     return send_request(config.llm['url'], config.llm_header, dict_data, filter)
+
 
 # Sentiment
 def sentiment(input: str) -> str:

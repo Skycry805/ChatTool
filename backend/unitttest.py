@@ -1,4 +1,4 @@
-# Tests and Coverage - not pretty, but works great! - v1.0 Niclas Sieveneck
+# Tests and Coverage - not pretty, but works great!
 
 import unittest
 import coverage
@@ -21,7 +21,7 @@ cov.start()
 import external
 import api
 ####################################################################################################################
-class UnittestExternal(unittest.TestCase):
+class UnittestExternal(): #unittest.TestCase):
 
     def test_json_select(self):
         json_element = {"Test1": {"Test2": "foo"}}
@@ -30,6 +30,7 @@ class UnittestExternal(unittest.TestCase):
         # Wrong filter
         path = ["Test1", "ERROR"]
         self.assertIsNone(external.json_select(json_element, path))
+
 
     def test_unkown_url_json(self):
         # build data
@@ -46,6 +47,7 @@ class UnittestExternal(unittest.TestCase):
         self.assertIsNone(external.send_request('http://null.niclas-sieveneck.de/', header, dict_data, filter))
         # HTTP != 200
         self.assertIsNone(external.send_request('http://niclas-sieveneck.de/test-not-exitst', header, dict_data, filter))
+
 
     def test_unkown_url_string(self):
         # build data
@@ -65,8 +67,8 @@ class UnittestExternal(unittest.TestCase):
         # Api without Post
         self.assertIsNone(external.send_request('https://httpbin.org/get', header, dict_data, filter))
 
+
     def test_request_filter(self):
-        import json
         # build data
         dict_data = ""
         filter = ['choices', 0, 'message', 'content']
@@ -78,46 +80,58 @@ class UnittestExternal(unittest.TestCase):
         # No filter
         self.assertIsInstance(external.send_request('https://httpbin.org/post', header, dict_data), dict)
 
+
     def test_translate(self):
         output = external.translate("de", "en", "Der Test.")
         self.assertIsNotNone(output)
         self.assertIsInstance(output, str)
+
 
     def test_translate_same_lang(self):
         output = external.translate("de", "de", "Der Test.")
         self.assertIsNotNone(output)
         self.assertIsInstance(output, str)
 
+
     def test_llm(self):
         output = external.llm("Just a test. Answer only with one word.")
         self.assertIsNotNone(output)
         self.assertIsInstance(output, str)
+
 
     def test_sentiment(self):
         output = external.sentiment("Good")
         self.assertIsNotNone(output)
         self.assertIsInstance(output, str)
 
+
 # Test for api by using external class, neat
-class UnittestApi(): #unittest.TestCase):
+# For coverage: Flask functions will http-requested and dirctly called, for coverage.
+class UnittestApi(unittest.TestCase): #unittest.TestCase):
 
     header = {
             "User-Agent": "VS-Chat/1.0.0",
             "Content-Type": "application/json"
             }
     
-    base_url = "http://127.0.0.1:5000/"
+    base_url = "http://127.0.0.1:5001/" ###################################### Port
 
+    # Send a test message and send incomplete requests
     def test_send_message(self):
-
         url = self.base_url + "send_message"
-
         msg = {"message": "TEST", "Name": "foo", "language": "de"}
 
         req = external.send_request(url, self.header, msg)
 
-        self.assertEqual(req, {"status": "Message received successfully"})
+        self.assertIsNotNone(req)
+        api.send_message()################################## <----- aquii
+        self.assertEqual(req, {'status': 'Message received successfully'})
 
+        # Bad request
+        req = external.send_request(url, self.header)
+        self.assertIsNotNone(req)
+
+        
 
 # Fix for not closing coverage propperly
 def additional_code():

@@ -22,19 +22,19 @@ chat.wsgi_app = ProxyFix(
 
 messages_to_send = {}
 language_list = ['en'] 
-message_ID = 0
+message_id = 0   #### Var namen
 
 @chat.route('/send_message', methods=['POST'])
-def receive_message():
+def send_message():
 
-    global message_ID
+    global message_id
     
-    print ("Message ID:", message_ID)
-    local_m_ID = message_ID + 1
+    print ("Message ID:", message_id)
+    local_m_id = message_id + 1
     received_message = {}
 
     json_data = request.get_json()
-    build_message (json_data, local_m_ID)
+    build_message (json_data, local_m_id)
 
 
     print(json_data)
@@ -45,14 +45,14 @@ def receive_message():
     print(f"Received message: {message}, Sender: {sender}, Language: {language}")
 
     if json_data.get('bot'):
-        answer = askBot(json_data.get('message'),json_data.get('language'))
-        local_m_ID = local_m_ID + 1
-        build_message (answer, local_m_ID)
+        answer = ask_bot(json_data.get('message'),json_data.get('language'))
+        local_m_id = local_m_id + 1
+        build_message (answer, local_m_id)
 
     
-    print(f"Received message: {json_data['message']}, Sender: {json_data['name']}, Language: {json_data['language']}")
-    message_ID = message_ID + 1 
-    received_message[message_ID] = json_data
+    #print(f"Received message: {json_data['message']}, Sender: {json_data['name']}, Language: {json_data['language']}")
+    message_id = message_id + 1 
+    received_message[message_id] = json_data
 
     response = {"status": "Message received successfully"}
     return jsonify(response), 200
@@ -85,7 +85,7 @@ def build_message (receive_message, m_ID: int):
     print("Added Messages:", messages_to_send)
 
 #Sending message to ChatBot and returns the answer
-def askBot (message: str, lang: str) -> str:
+def ask_bot (message: str, lang: str) -> str:
     answer = external.llm(message)
     output = {'Sender': 'Bob der Bot', 'Message': answer, 'Language': lang}
     return output
@@ -103,10 +103,11 @@ def translate_message(source_lang: str, target_lang: str, message: str) -> str:
     return translated_message
 
 
-@chat.route('/update_message/<int:msg_id>', methods=['POST'])
-def send_message(msg_id):
 
-    global messages_to_send, message_ID
+@chat.route('/update_message/<int:msg_id>', methods=['POST'])
+def update_message(msg_id):
+
+    global messages_to_send, message_id
     print("Messages:", messages_to_send)
     print("ID vom CLient", msg_id)
 
@@ -114,10 +115,10 @@ def send_message(msg_id):
     print("Messages:", local_all_messages)
 
     print("Test der Ausgabe:", local_all_messages[msg_id]) 
-    local_message_ID = message_ID
+    local_message_id = message_id
     send_data = {}
 
-    while msg_id <= local_message_ID:
+    while msg_id <= local_message_id:
         send_data[msg_id] = local_all_messages[msg_id]
         msg_id +=1
 
@@ -129,12 +130,12 @@ def send_message(msg_id):
     return jsonify(response), 200
 
 
-@chat.route('/message_id', methods=['POST'])
-def send_message_ID():
+@chat.route('/get_message_id', methods=['POST'])
+def get_message_id():
 
-    global message_ID
+    global message_id
     #get message from database
-    send_data = {'message_ID': message_ID}
+    send_data = {'message_id': message_id}
 
 
     print(f"Sending message: {send_data}")
@@ -156,4 +157,4 @@ if __name__ == '__main__':
             debug=True
             print("Debug enabled!")
 
-    chat.run(host='0.0.0.0', port=5000,debug=debug) ##################################################
+    chat.run(host='0.0.0.0', port=5001, debug=debug) ################################################## PORRT!!!
