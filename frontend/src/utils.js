@@ -1,12 +1,11 @@
-
-
 let messageID = 0;
+let serverUrl = 'https://chat.niclas-sieveneck.de:5000';
 
   //Sending Message to Server
 export const sendMessage = async (jsonMessage) => {
   console.log("Message sent:", jsonMessage)
 try {
-  return await fetch('http://vs-api:5000/send_message_to_server', {
+  return await fetch(`${serverUrl}/send_message`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -33,7 +32,7 @@ export const reciveMessage = async () => {
         messageID = result;
       try {
         const msg_id = messageID;
-        const response = await fetch(`http://vs-api:5000/update_message/${msg_id}`,{
+        const response = await fetch(`${serverUrl}/update_message/${msg_id}`,{
           method: 'POST',
           headers: {
             'Content-Type': 'application/json' 
@@ -62,7 +61,7 @@ export const reciveMessage = async () => {
   const checkNewMessage = async () => {
     let output = '';
     try {
-      const response = await fetch('http://vs-api:5000/message_ID',{
+      const response = await fetch(`${serverUrl}/get_message_id`,{
         method: 'POST',
         headers: {
           'Content-Type': 'application/json' 
@@ -70,7 +69,7 @@ export const reciveMessage = async () => {
       })
       .then((response) => response.json())
       .then(data => {
-        output = data.message_ID;
+        output = data.message_id;
     })
     return (output);
     }      

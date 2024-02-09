@@ -150,11 +150,15 @@ def get_message_id():
 
 if __name__ == '__main__':
     # Disable debug, when deployed in a container, for production use
-    debug = True #######################################################################################################
+    debug = True #############################################################################
     if len( sys.argv ) > 1:
         first_arg = str(sys.argv[1])
         if first_arg.lower() == "debug":
             debug=True
             print("Debug enabled!")
+    
+    # Logging
+    sys.stdout = open('logs/flask_output.log', 'w')
+    sys.stderr = open('logs/flask_error.log', 'w')
 
-    chat.run(host='0.0.0.0', port=5001, debug=debug) ################################################## PORRT!!!
+    chat.run(host='0.0.0.0', port=5000, debug=debug)

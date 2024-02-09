@@ -13,7 +13,7 @@ sys.path.append(sc_path)
 
 print("Start Coverage")
 # Ignore this file and dummy files
-ignore = [__file__, "config.py", "backend/config.py", "*_dummy.py"]
+ignore = [__file__, "config.py", "backend/config.py", "*_dummy.py", "api_dey.py"]
 cov = coverage.Coverage(source=[".",".."], omit=ignore)
 cov.start()
 
