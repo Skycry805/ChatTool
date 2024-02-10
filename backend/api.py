@@ -73,12 +73,25 @@ def add_new_language(language: str):
     if language not in chat_history.language_list:
         chat_history.language_list.append(language)
 
+
 def translate_message(source_lang: str, target_lang: str, message: str) -> str:
     translated_message = external.translate(source_lang, target_lang, message)
     return translated_message
 
 
 ### Routes
+@chat.route("/register_user/<string:language>", methods=['POST'])
+def register_user(language: str):
+    add_new_language(language)
+    return 200
+
+
+##debug
+@chat.route("/get_languages", methods=['POST'])
+def get_languages():
+    return chat_history.language_list
+
+
 @chat.route('/send_message', methods=['POST'])
 def send_message():
     
@@ -131,7 +144,6 @@ def get_message_id():
 
     #get message from database
     send_data = {'message_id': chat_history.message_id}
-
 
     print(f"Sending message: {send_data}")
 
