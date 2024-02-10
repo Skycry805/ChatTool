@@ -20,8 +20,7 @@ cov.start()
 # Import custom modules
 import external
 import api
-####################################################################################################################
-class UnittestExternal():#unittest.TestCase):
+class UnittestExternal(unittest.TestCase):
 
     def test_json_select(self):
         json_element = {"Test1": {"Test2": "foo"}}

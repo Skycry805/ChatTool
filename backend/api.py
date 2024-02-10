@@ -93,6 +93,49 @@ def register_user(language: str):
 
 @chat.route('/send_message', methods=['POST'])
 def send_message():
+    """
+    Accepts messages from a client
+    ---
+    paths:
+      /send_message:
+        post:
+          summary: Client sends a message to the server
+          requestBody:
+            required: true
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    message:
+                      type: string
+                      description: The message that the server should recvie
+                    sender:
+                      type: string
+                      description: The sender of the message
+                    language:
+                      type: string
+                      description: The language the message is written 
+                    bob:
+                      type: boolean
+                      description: Should the bot be actived or not
+                  required:
+                    - message
+                    - sender
+                    - language
+                    - bob
+      responses:
+        '200':
+          description: Respone after successfully receiving the message 
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description: Status of the Message transmission
+    """
     
     received_message = {}
 
@@ -119,6 +162,42 @@ def send_message():
 
 @chat.route('/update_message/<int:msg_id>', methods=['POST'])
 def update_message(msg_id):
+    """
+    Sends a message based on the message ID
+    ---
+    paths:
+    /update_message/{msg_id}:
+        get:
+        summary: Grab new messages form the server
+        parameters:
+            - in: path
+            name: msg_id
+            required: true
+            schema:
+                type: integer
+            description: Send the ID of the last message that you recived
+      responses:
+        '200':
+          description: Successfull request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: object
+                    properties:
+                      en:
+                        type: string
+                        description: Message in English
+                    description: Message in any language a user speaks
+                  sender:
+                    type: string
+                    description: Sender of the message
+                  sentiment:
+                    type: string
+                    description: Sentiment of the message
+    """
 
     # catch exception
     if msg_id < 1:
@@ -143,6 +222,25 @@ def update_message(msg_id):
 
 @chat.route('/get_message_id', methods=['POST'])
 def get_message_id():
+    """
+    Answers with the message ID of the server 
+    ---
+    paths:
+      /get_message_id:
+        post:
+          summary: Get the current message ID
+          responses:
+            '200':
+              description: Successful request
+              content:
+                application/json:
+                  schema:
+                    type: object
+                    properties:
+                      message_id:
+                        type: integer
+                        description: The current message ID
+    """
 
     #get message from database
     send_data = {'message_id': chat_history.message_id}
