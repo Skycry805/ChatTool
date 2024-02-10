@@ -1,5 +1,5 @@
 let messageID = 0;
-let serverUrl = 'https://chat.niclas-sieveneck.de:5000';
+let serverUrl = 'http://127.0.0.1:5000';
 
   //Sending Message to Server
 export const sendMessage = async (jsonMessage) => {

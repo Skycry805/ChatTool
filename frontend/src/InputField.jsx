@@ -3,11 +3,16 @@ import { Form } from 'react-bootstrap';
 const InputField = ({
   value,
   setValue,
-  label,
   placeholder,
   handleButtonClick,
   buttonText,
 }) => {
+
+  const handleKeyPress = (event) => {
+    if (event.key === 'Enter') {
+      handleButtonClick();
+    }
+  }
   return (
     <>
       <Form.Group className='mb-3' controlId='formBasicEmail'>
@@ -16,9 +21,10 @@ const InputField = ({
           placeholder={placeholder}
           value={value}
           onChange={(name) => setValue(name.target.value)}
+          onKeyDown={handleKeyPress}
         />
       </Form.Group>
-        <button onClick={handleButtonClick}>{buttonText}</button>
+        <button onClick={handleButtonClick} >{buttonText}</button>
     </>
   );
 };

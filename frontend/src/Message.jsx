@@ -1,12 +1,12 @@
 import { Row } from 'react-bootstrap';
 
+//Show recived message on screen 
 const Message = ({
     message,
     sender,
     sentiment,
-    
+
     }) => {
-        console.log(sentiment)
         const getMessageColor = () => {
         switch (sentiment) {
             case "positive": return "green";
@@ -18,8 +18,6 @@ const Message = ({
         <Row>
             <p style={{backgroundColor: getMessageColor(), color: "white"}}><b>{sender}</b> - {message}</p>
         </Row> 
-    
-    )
-    
+    ) 
 }
 export default Message

@@ -37,16 +37,16 @@ function App() {
   const handleLanguageSelect = (lang) => {
     setLanguage(lang);
   };
-  const handleLanguageSelected = (lang) => {
+  const handleLanguageSelected = () => {
     if (language.trim() !== '') {
-    setLanguage(lang);
     setLanguageSelected(true);
     console.log(senderConfirmed)
     }
   }
 
   const handleBotBob = () => {
-    setBob(true);
+    console.log('Ich mache etwas');
+    setBob(!bob);
   }
 
 //Sends message to server
@@ -86,24 +86,24 @@ function App() {
       return () => clearInterval(intervalId);
     } 
     []});
-//Transforms Json to 
-  const transformJSON = (json) => {
-    const transformedJSON = {};
-    console.log("Transformed Message:", json)
-    for (const key in json) {
-      if (json.hasOwnProperty(key)) {
-        const item = json[key];
-        const transformedItem = {
-          "message": item.message[language],
-          "sender": item.sender,
-          "sentiment": item.sentiment
-        };
-        transformedJSON[key] = transformedItem;
+
+    const transformJSON = (json) => {
+      const transformedJSON = {};
+      console.log("Transformed Message:", json)
+      for (const key in json) {
+        if (json.hasOwnProperty(key)) {
+          const item = json[key];
+          const transformedItem = {
+            "message": item.message[language],
+            "sender": item.sender,
+            "sentiment": item.sentiment
+          };
+          transformedJSON[key] = transformedItem;
+        }
       }
-    }
-    console.log("transformed" ,transformedJSON)
-    return transformedJSON;
-  }
+      console.log("transformed" ,transformedJSON)
+      return transformedJSON;
+    };
 
   return (
     <Container>
@@ -119,48 +119,62 @@ function App() {
         })}
         </div>
       </Row>
-
         {!senderConfirmed || !languageSelected ? (
+            <>
             <Row>
               <Col>
-                <p id={'username'}>Ihr Name: {sender} </p>
-                <p id={'standardLanguage'}>Aktuelle Sprache: {language} </p>
+              <p id={'username'}>Ihr Name: {sender} </p>
+              <p id={'standardLanguage'}>Aktuelle Sprache: {language} </p>
+              </Col>
+
+            </Row>
+            <Row>
+            <Col>
+              <SelectLanguage
+                handleSelect={handleLanguageSelect}
+                handleButtonClick={handleLanguageSelected} />
+            </Col>
+          </Row>
+          <Row>
+              <Col>
                 <InputField
                   value={sender}
                   setValue={setSender}
                   placeholder={'Bitte geben Sie ihren Namen ein'}
                   handleButtonClick={handleSenderConfirmation}
-                  buttonText={'Namen bestätigen'}
-                />
-                <SelectLanguage
-                handleSelect={handleLanguageSelect}
-                handleButtonClick={handleLanguageSelected}
-                />
+                  buttonText={'Namen und Sprache bestätigen'} />
+              </Col>
+            </Row></>
+        ) : (
+          <><Row>
+            <Col>
+              <p id={'username'}>Ihr Name: {sender} </p>
+              <p id={'selectedLanguage'}>Ihre ausgewählte Sprache: {language} </p>
+            </Col>  
+              <Col>
+              <p id={'neutral'}>Diese Nachrichten sind neutral </p>
+              <p id={'positiv'}>Diese Nachrichten sind positive</p>
+              <p id={'negativ'}>Diese Nachrichten sind neagtiv</p>
               </Col>
             </Row>
-
-        ) : (
-          <Row>
-            <Col>
-            <p id={'username'}>Ihr Name: {sender} </p>
-                <p id={'selectedLanguage'}>Ihre ausgewählte Sprache: {language} </p>
-                 <InputField
-                    value={message}
-                    setValue={setMessage}
-                    placeholder={'Nachricht eingeben'}
-                    handleButtonClick={handleSendMessage}
-                    buttonText={'Nachricht senden'}
-                  />
-                  <BotBob
-                  setBotBob = {handleBotBob}
-                  />
-               </Col>
-            </Row>
-
-
-      
+            <Row>
+              <Col>
+              <InputField
+                value={message}
+                setValue={setMessage}
+                placeholder={'Nachricht eingeben'}
+                handleButtonClick={handleSendMessage}
+                buttonText={'Nachricht senden'} />
+            </Col>
+          </Row>
+          <Row style={{ marginTop: '20px' }}>
+              <Col>
+                <BotBob 
+                handleClickedBotBob = {handleBotBob}
+                />
+              </Col>
+          </Row></>
       )}
-
     </Container>
   );
 }

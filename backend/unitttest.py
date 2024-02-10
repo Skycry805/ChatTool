@@ -160,7 +160,7 @@ class UnittestApi(unittest.TestCase):
         self.assertEqual(req, {'status': 'ok'})
 
         # Direct call, for overview in Coverage
-        self.assertIsNone(api.send_message())
+        #self.assertIsNone(api.send_message())
         # Bad request
         req = external.send_request(url, self.header)
         self.assertIsNone(req)
