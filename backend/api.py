@@ -170,7 +170,7 @@ def handle_exception(e):
     return response
 
 
-if __name__ == '__main__':
+if __name__ == '__main__': # pragma: no cover
     # Disable debug, when deployed in a container, for production use
     debug = False
     if len( sys.argv ) > 1:
