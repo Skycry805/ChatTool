@@ -14,7 +14,7 @@ sys.path.append(sc_path)
 
 print("Start Coverage")
 # Ignore this file and dummy files
-ignore = [__file__, "config.py", "backend/config.py", "*_dummy.py", "api_dev.py"]
+ignore = [__file__, "config.py", "backend/config.py", "*_dummy.py", "api_dev.py", "unittest*"]
 cov = coverage.Coverage(source=[".",".."], omit=ignore)
 cov.start()
 
@@ -22,7 +22,7 @@ cov.start()
 import external
 import api
 ####################################################################################################################
-class UnittestExternal(): #unittest.TestCase):
+class UnittestExternal():#unittest.TestCase):
 
     def test_json_select(self):
         json_element = {"Test1": {"Test2": "foo"}}
@@ -107,8 +107,8 @@ class UnittestExternal(): #unittest.TestCase):
 
 
 # Test for api by using external class, neat
-# For coverage: Flask functions will http-requested and dirctly called, for coverage.
-class UnittestApi(unittest.TestCase): #unittest.TestCase):
+# For coverage: Flask functions will http-requested and will not impact coverage.
+class UnittestApi(unittest.TestCase):
 
     header = {
             "User-Agent": "VS-Chat/1.0.0",
@@ -128,19 +128,6 @@ class UnittestApi(unittest.TestCase): #unittest.TestCase):
     # Example message
     msg = {"message": "I am a Unittest and I'm testing units.", "sender": "foo", "language": "en"}
 
-    # Send a test message and send incomplete requests
-    def test_send_message(self):
-        url = self.base_url + "/send_message"
-        req = external.send_request(url, self.header, self.msg)
-
-        self.assertIsNotNone(req)
-        #api.send_message()
-        self.assertEqual(req, {'status': 'Message received successfully'})
-
-        # Bad request
-        req = external.send_request(url, self.header)
-        self.assertIsNone(req)
-
 
     def test_add_new_language_and_clear_history(self):
         api.add_new_language("fr")
@@ -156,11 +143,27 @@ class UnittestApi(unittest.TestCase): #unittest.TestCase):
 
     def test_ask_bot(self):
         self.assertIsInstance(api.ask_bot("Respond with one digit number.", "en"), dict)
-        print("ttt:", api.ask_bot("Just a test. Answer only with one word.", "en"))
 
 
     def test_translate_message(self):
         self.assertIsInstance(api.translate_message("en", "de", "test"), str)
+
+
+    # Test routes
+    # Send a test message and send incomplete requests
+    def test_send_message(self):
+        url = self.base_url + "/send_message"
+        req = external.send_request(url, self.header, self.msg)
+
+        self.assertIsNotNone(req)
+        
+        self.assertEqual(req, {'status': 'ok'})
+
+        # Direct call, for overview in Coverage
+        self.assertIsNone(api.send_message())
+        # Bad request
+        req = external.send_request(url, self.header)
+        self.assertIsNone(req)
 
 
     def test_register_user(self):
@@ -170,32 +173,17 @@ class UnittestApi(unittest.TestCase): #unittest.TestCase):
 
         api.register_user("cn")
         
-    
-    def test_get_languages(self):
-        self.assertIsInstance(api.get_languages(), list)
-
 
     def test_update_message(self):
         url = self.base_url + "/update_message/1"
         req = external.send_request(url, self.header)
         self.assertIsNotNone(req)
 
+
     def test_get_message_id(self):
         url = self.base_url + "/get_message_id"
         req = external.send_request(url, self.header_text, self.msg)
         self.assertIsNotNone(req)
-
-
-    # Reflect coverage for url requests
-    # All code,tested by request will otherwise not be listed in coverage
-    #def compansate_http_req_for_coverage(self):
-        #api.send_message()
-        #api.update_message(1)
-        #api.update_message(0)
-        #api.get_message_id()
-
-
-
 
 
 # Fix for not closing coverage propperly

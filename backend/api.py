@@ -7,6 +7,7 @@ import copy
 
 from flasgger import Swagger
 from werkzeug.middleware.proxy_fix import ProxyFix
+from werkzeug.exceptions import HTTPException
 
 import external
 
@@ -37,6 +38,7 @@ def clear_history():
     # sadly flask is not good in a class...
     global chat_history
     chat_history = history()
+
 
 #builds a message that can be send to the user
 def build_message(receive_message):
@@ -86,13 +88,7 @@ def translate_message(source_lang: str, target_lang: str, message: str) -> str:
 @chat.route("/register_user/<string:language>", methods=['POST'])
 def register_user(language: str):
     add_new_language(language)
-    return default_ok, 200
-
-
-##debug
-@chat.route("/get_languages", methods=['POST'])
-def get_languages():
-    return chat_history.language_list
+    return jsonify(default_ok)
 
 
 @chat.route('/send_message', methods=['POST'])
@@ -118,8 +114,7 @@ def send_message():
  
     received_message[chat_history.message_id] = json_data
 
-    response = {"status": "Message received successfully"}
-    return jsonify(response), 200
+    return jsonify(default_ok)
 
 
 @chat.route('/update_message/<int:msg_id>', methods=['POST'])
@@ -141,9 +136,9 @@ def update_message(msg_id):
     print("Sending message:", send_data)
     #build json for export
     response = json.loads(json.dumps(send_data, ensure_ascii=False))
-    print (response)  
+    print (response)
     #return json
-    return jsonify(response), 200
+    return jsonify(response)
 
 
 @chat.route('/get_message_id', methods=['POST'])
@@ -159,7 +154,20 @@ def get_message_id():
     print (response)
     
     #return json
-    return jsonify(response), 200
+    return jsonify(response)
+
+
+# Gerneric errror handler
+@chat.errorhandler(HTTPException)
+def handle_exception(e):
+    response = e.get_response()
+    response.data = json.dumps({
+        "code": e.code,
+        "name": e.name,
+        "description": e.description,
+    })
+    response.content_type = "application/json"
+    return response
 
 
 if __name__ == '__main__':
