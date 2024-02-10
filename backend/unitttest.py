@@ -6,7 +6,6 @@ import coverage
 import atexit
 import sys
 import os
-import json
 
 # Add project root to path
 sc_path = os.path.dirname(os.path.realpath(__file__))
@@ -170,20 +169,25 @@ class UnittestApi(unittest.TestCase):
         url = self.base_url + "/register_user/cn"
         req = external.send_request(url, self.header)
         self.assertIsNotNone(req)
-
-        api.register_user("cn")
+        self.assertEqual(req, {'status': 'ok'})
         
 
     def test_update_message(self):
         url = self.base_url + "/update_message/1"
         req = external.send_request(url, self.header)
         self.assertIsNotNone(req)
+        self.assertTrue(req['1'])
 
+        # Wrong ID
+        url = self.base_url + "/update_message/0"
+        req = external.send_request(url, self.header)
+        self.assertIsNone(req)
 
     def test_get_message_id(self):
         url = self.base_url + "/get_message_id"
         req = external.send_request(url, self.header_text, self.msg)
         self.assertIsNotNone(req)
+        self.assertTrue(req['message_id'])
 
 
 # Fix for not closing coverage propperly
