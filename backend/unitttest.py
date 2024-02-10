@@ -6,6 +6,7 @@ import coverage
 import atexit
 import sys
 import os
+import json
 
 # Add project root to path
 sc_path = os.path.dirname(os.path.realpath(__file__))
@@ -13,7 +14,7 @@ sys.path.append(sc_path)
 
 print("Start Coverage")
 # Ignore this file and dummy files
-ignore = [__file__, "config.py", "backend/config.py", "*_dummy.py", "api_dey.py"]
+ignore = [__file__, "config.py", "backend/config.py", "*_dummy.py", "api_dev.py"]
 cov = coverage.Coverage(source=[".",".."], omit=ignore)
 cov.start()
 
@@ -114,24 +115,88 @@ class UnittestApi(unittest.TestCase): #unittest.TestCase):
             "Content-Type": "application/json"
             }
     
-    base_url = "http://127.0.0.1:5001/" ###################################### Port
+    header_text = {
+            "User-Agent": "VS-Chat/1.0.0",
+            "Content-Type": "application/x-www-form-urlencoded"
+            }
+    
+
+    base_url = "https://chat.niclas-sieveneck.de:5000"
+
+    default_ok = {"status": "ok"}
+
+    # Example message
+    msg = {"message": "I am a Unittest and I'm testing units.", "sender": "foo", "language": "en"}
 
     # Send a test message and send incomplete requests
     def test_send_message(self):
-        url = self.base_url + "send_message"
-        msg = {"message": "TEST", "Name": "foo", "language": "de"}
-
-        req = external.send_request(url, self.header, msg)
+        url = self.base_url + "/send_message"
+        req = external.send_request(url, self.header, self.msg)
 
         self.assertIsNotNone(req)
-        api.send_message()################################## <----- aquii
+        #api.send_message()
         self.assertEqual(req, {'status': 'Message received successfully'})
 
         # Bad request
         req = external.send_request(url, self.header)
+        self.assertIsNone(req)
+
+
+    def test_add_new_language_and_clear_history(self):
+        api.add_new_language("fr")
+        self.assertEqual(api.chat_history.language_list, ["en","fr"])
+        # Clear
+        api.clear_history()
+        self.assertEqual(api.chat_history.language_list, ["en"])
+        
+    
+    def test_build_messages(self):
+        api.build_message(self.msg)
+
+
+    def test_ask_bot(self):
+        self.assertIsInstance(api.ask_bot("Respond with one digit number.", "en"), dict)
+        print("ttt:", api.ask_bot("Just a test. Answer only with one word.", "en"))
+
+
+    def test_translate_message(self):
+        self.assertIsInstance(api.translate_message("en", "de", "test"), str)
+
+
+    def test_register_user(self):
+        url = self.base_url + "/register_user/cn"
+        req = external.send_request(url, self.header)
         self.assertIsNotNone(req)
 
+        api.register_user("cn")
         
+    
+    def test_get_languages(self):
+        self.assertIsInstance(api.get_languages(), list)
+
+
+    def test_update_message(self):
+        url = self.base_url + "/update_message/1"
+        req = external.send_request(url, self.header)
+        self.assertIsNotNone(req)
+
+    def test_get_message_id(self):
+        url = self.base_url + "/get_message_id"
+        req = external.send_request(url, self.header_text, self.msg)
+        self.assertIsNotNone(req)
+
+
+    # Reflect coverage for url requests
+    # All code,tested by request will otherwise not be listed in coverage
+    #def compansate_http_req_for_coverage(self):
+        #api.send_message()
+        #api.update_message(1)
+        #api.update_message(0)
+        #api.get_message_id()
+
+
+
+
 
 # Fix for not closing coverage propperly
 def additional_code():

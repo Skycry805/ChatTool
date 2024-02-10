@@ -29,6 +29,9 @@ class history:
 # History data class
 chat_history = history()
 
+# Default ok for 200
+default_ok = {"status": "ok"}
+
 # Clear histroy data
 def clear_history():
     # sadly flask is not good in a class...
@@ -36,7 +39,7 @@ def clear_history():
     chat_history = history()
 
 #builds a message that can be send to the user
-def build_message (receive_message):
+def build_message(receive_message):
 
     message = receive_message.get('message')
     sender = receive_message.get('sender')
@@ -60,7 +63,7 @@ def build_message (receive_message):
 
 
 #Sending message to ChatBot and returns the answer
-def ask_bot (message: str, lang: str) -> str:
+def ask_bot(message: str, lang: str) -> str:
     answer = external.llm(message)
     sender = "Bob der Bot"
     output = {'sender': sender, 'message': answer, 'language': lang}
@@ -83,7 +86,7 @@ def translate_message(source_lang: str, target_lang: str, message: str) -> str:
 @chat.route("/register_user/<string:language>", methods=['POST'])
 def register_user(language: str):
     add_new_language(language)
-    return 200
+    return default_ok, 200
 
 
 ##debug
@@ -121,6 +124,10 @@ def send_message():
 
 @chat.route('/update_message/<int:msg_id>', methods=['POST'])
 def update_message(msg_id):
+
+    # catch exception
+    if msg_id < 1:
+        msg_id = 0
 
     local_all_messages = copy.deepcopy(chat_history.messages_to_send)
 
