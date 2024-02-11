@@ -33,10 +33,10 @@ git clone https://github.com/Skycry805/ChatTool.git
 ## Configure
 Copy configuration file.
 ```
-cp backend/config_template.py backend/configy.py
+cp backend/config_template.py backend/config.py
 ```
 
-Put your API-Key in backend/config.py
+Put your API-Keys in backend/config.py
 
 Example:
 ```
@@ -54,8 +54,8 @@ Put your certificate and the private key into docker/cert forlder
 
 Naming:
 ```
-fullchain.pem
-privkey.pem
+docker/cert/fullchain.pem
+docker/cert/privkey.pem
 ```
 
 ## Build and run
@@ -75,7 +75,7 @@ docker-compose up -d
 ## Test
 
 ### Start unittest
-If you want to run the coverage test, make sure that the backend adress is correct in backend/unittest.py
+If you want to run the coverage test, make sure that the backend address is correct in backend/unittest.py
 
 ```
 class UnittestApi(unittest.TestCase):
@@ -85,10 +85,10 @@ class UnittestApi(unittest.TestCase):
 
 Run coverage 
 ```
-python3 ./backend/unitttest.py
+python3 ./backend/unittests.py
 ```
 
-Keep in mind, the backend/apy.py will not be fully covert in unittests, because the routes are called by a HTTP-Request!
+Keep in mind, some functions in backend/apy.py are excluded in the coverage, because the routes are called by a HTTP-Request in tests!
 
 ### Run with coverage WebUI
 Run the coverage compose file for the coverage web ui:

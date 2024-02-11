@@ -7,8 +7,6 @@ import atexit
 import sys
 import os
 
-from flask import Response
-
 # Add project root to path
 sc_path = os.path.dirname(os.path.realpath(__file__))
 sys.path.append(sc_path)
