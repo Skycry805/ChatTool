@@ -20,6 +20,8 @@ cov.start()
 # Import custom modules
 import external
 import api
+from history import History
+
 class UnittestExternal(unittest.TestCase):
 
     def test_json_select(self):
@@ -188,6 +190,29 @@ class UnittestApi(unittest.TestCase):
         self.assertIsNotNone(req)
         self.assertTrue(req['message_id'])
 
+
+# Test chat history
+class UnittestHistory(unittest.TestCase):
+
+    chat_history = History()
+
+    def test_create_history(self):
+        self.chat_history = History()
+        self.assertIsInstance(self.chat_history, History)
+    
+    def test_add_message_language(self):
+        self.chat_history.messages_to_send["test"] = "test"
+        self.assertEqual(self.chat_history.messages_to_send["test"], "test")
+        self.chat_history.language_list.append("de")
+        self.assertTrue(self.chat_history.language_list.count("de") == 1)
+        self.chat_history.message_id = 1
+        self.assertEqual(self.chat_history.message_id, 1)
+    
+    def test_clear_history(self):
+        self.assertTrue(self.chat_history.reset())
+        self.assertEqual(self.chat_history.messages_to_send, {})
+        self.assertEqual(self.chat_history.language_list, ['en'])
+        self.assertEqual(self.chat_history.message_id, 0)
 
 # Fix for not closing coverage propperly
 def additional_code():

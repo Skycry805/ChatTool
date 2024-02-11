@@ -10,6 +10,7 @@ from werkzeug.middleware.proxy_fix import ProxyFix
 from werkzeug.exceptions import HTTPException
 
 import external
+from history import History
 
 chat = Flask(__name__)
 swagger = Swagger(chat)
@@ -20,24 +21,16 @@ chat.wsgi_app = ProxyFix(
     chat.wsgi_app, x_for=1, x_proto=1, x_host=1, x_prefix=1
 )
 
-# Class for chat history
-class history:
-    def __init__(self):
-        self.messages_to_send = {}
-        self.language_list = ['en'] 
-        self.message_id = 0
 
 # History data class
-chat_history = history()
+chat_history = History()
 
 # Default ok for 200
 default_ok = {"status": "ok"}
 
 # Clear histroy data
 def clear_history():
-    # sadly flask is not good in a class...
-    global chat_history
-    chat_history = history()
+    chat_history.reset()
 
 
 #builds a message that can be send to the user

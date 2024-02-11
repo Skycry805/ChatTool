@@ -78,6 +78,8 @@ Run coverage
 python3 ./backend/unitttest.py
 ```
 
+Keep in mind, the backend/apy.py will not be fully covert in unittests, because the routes are called by a HTTP-Request!
+
 ### Run with coverage WebUI
 If you want to run the coverage test, make sure that the backend adress is correct in backend/unittest.py
 
