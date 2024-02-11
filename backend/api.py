@@ -190,7 +190,7 @@ def update_message(msg_id):
 
     # catch exception
     if msg_id < 1:
-        msg_id = 0
+        msg_id = 1
 
     local_all_messages = copy.deepcopy(chat_history.messages_to_send)
 
