@@ -13,6 +13,31 @@ import external
 from history import History
 
 chat = Flask(__name__)
+
+# Swagger base config
+swagger_config = {
+    "spec": {
+        "openapi": "3.0.3", 
+        "info": {
+            "title": "Chat Support - 1.0",
+            "description": "Chat Support API 1.0",
+            "version": "1.0.0",
+        },
+    },
+    "components": {
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "scheme": "bearer",
+                "bearerFormat": "JWT",
+            }
+        }
+    },
+}
+chat.config["SWAGGER"] = swagger_config
+chat.config["SWAGGER"]['openapi'] = '3.0.3'
+
+# Load yaml
 swagger = Swagger(chat, template_file='swagger/swagger.yaml')
 CORS(chat)
 
