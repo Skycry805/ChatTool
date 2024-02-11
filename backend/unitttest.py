@@ -164,13 +164,6 @@ class UnittestApi(unittest.TestCase):
         # Bad request
         req = external.send_request(url, self.header)
         self.assertIsNone(req)
-
-
-    def test_register_user(self):
-        url = self.base_url + "/register_user/cn"
-        req = external.send_request(url, self.header)
-        self.assertIsNotNone(req)
-        self.assertEqual(req, {'status': 'ok'})
         
 
     def test_update_message(self):

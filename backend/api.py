@@ -78,12 +78,6 @@ def translate_message(source_lang: str, target_lang: str, message: str) -> str:
 
 
 ### Routes
-@chat.route("/register_user/<string:language>", methods=['POST'])
-def register_user(language: str):
-    add_new_language(language)
-    return jsonify(default_ok)
-
-
 @chat.route('/send_message', methods=['POST'])
 def send_message():
     """
@@ -145,6 +139,7 @@ def send_message():
    
 
     if json_data.get('bob'):
+        msg = json_data.get('sender') + ": " + json_data.get('message')
         answer = ask_bot(json_data.get('message'),json_data.get('language'))
         build_message (answer)
  
