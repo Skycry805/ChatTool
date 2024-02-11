@@ -104,7 +104,7 @@ def translate_message(source_lang: str, target_lang: str, message: str) -> str:
 
 ### Routes
 @chat.route('/send_message', methods=['POST'])
-def send_message():
+def send_message(): # pragma: no cover # exclude from unittest. Test calls via web request
    
     received_message = {}
 
@@ -132,7 +132,7 @@ def send_message():
 
 
 @chat.route('/update_message/<int:msg_id>', methods=['POST'])
-def update_message(msg_id):
+def update_message(msg_id): # pragma: no cover # exclude from unittest. Test calls via web request
     # catch exception
     if msg_id < 1:
         msg_id = 1
@@ -155,7 +155,7 @@ def update_message(msg_id):
 
 
 @chat.route('/get_message_id', methods=['POST'])
-def get_message_id():
+def get_message_id(): # pragma: no cover # exclude from unittest. Test calls via web request
      #get message from database
     send_data = {'message_id': chat_history.message_id}
 
@@ -171,7 +171,7 @@ def get_message_id():
 
 # Gerneric errror handler
 @chat.errorhandler(HTTPException)
-def handle_exception(e):
+def handle_exception(e): # pragma: no cover # exclude from unittest. Test calls via web request
     response = e.get_response()
     response.data = json.dumps({
         "code": e.code,

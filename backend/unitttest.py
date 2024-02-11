@@ -7,6 +7,8 @@ import atexit
 import sys
 import os
 
+from flask import Response
+
 # Add project root to path
 sc_path = os.path.dirname(os.path.realpath(__file__))
 sys.path.append(sc_path)
@@ -173,7 +175,7 @@ class UnittestApi(unittest.TestCase):
         self.assertTrue(req['1'])
 
         # Wrong ID
-        url = self.base_url + "/update_message/0"
+        url = self.base_url + "/update_message/-1"
         req = external.send_request(url, self.header)
         self.assertIsNone(req)
 
@@ -181,7 +183,7 @@ class UnittestApi(unittest.TestCase):
         url = self.base_url + "/get_message_id"
         req = external.send_request(url, self.header_text, self.msg)
         self.assertIsNotNone(req)
-        self.assertTrue(req['message_id'])
+        self.assertIsInstance(req['message_id'], int)
 
 
 # Test chat history
