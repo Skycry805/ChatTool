@@ -131,6 +131,7 @@ function App() {
             <Col>
               <p id={'username'}>Ihr Name: {sender} </p>
               <p id={'selectedLanguage'}>Ihre ausgewählte Sprache: {language} </p>
+              <p id={'initalizedMessage'}>Senden Sie eine Nachricht, um am Chat teilzunehmen.</p>
             </Col>  
               <Col>
               <p id={'neutral'}>Diese Nachrichten sind neutral</p>

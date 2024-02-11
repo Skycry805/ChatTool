@@ -74,15 +74,7 @@ docker-compose up -d
 
 ## Test
 
-### Backend
-Run coverage 
-```
-python3 ./backend/unitttest.py
-```
-
-Keep in mind, the backend/apy.py will not be fully covert in unittests, because the routes are called by a HTTP-Request!
-
-### Run with coverage WebUI
+### Start unittest
 If you want to run the coverage test, make sure that the backend adress is correct in backend/unittest.py
 
 ```
@@ -91,13 +83,15 @@ class UnittestApi(unittest.TestCase):
     base_url = "https://your-server.com:5000"
 ```
 
-Run the test
-
+Run coverage 
 ```
-python3 backend/unittest.py
+python3 ./backend/unitttest.py
 ```
 
-Run the coverage compose file for the coverage WebUI:
+Keep in mind, the backend/apy.py will not be fully covert in unittests, because the routes are called by a HTTP-Request!
+
+### Run with coverage WebUI
+Run the coverage compose file for the coverage web ui:
 
 ```
 docker-compose --file ./docker-compose.coverage.yml up -d 
