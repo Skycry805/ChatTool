@@ -2,7 +2,9 @@
 
 ![Chat Support](https://github.com/Skycry805/ChatTool/blob/master/misc/chat_support_logo.png?raw=true)
 
-Innovative chat tool with AI integration.
+Innovative Chat Tool with AI integration.
+
+The goal for the chat system was to make chats much more accessible and to break curtain barriers. The primary obstacle faced by the majority of individuals is the language barrier. Therefore, the chat system is equipped with an integrated translator that translates every message into the user's native language. Another significant barrier for many people is to determine if a message is meant positively or negatively. That is why, the chat system has an integrated sentiment analysis to indicate how a message was intended. It also includes a helpful AI-driven Chat Bot, that can be activated on demand.
 
 ## Installation
 
