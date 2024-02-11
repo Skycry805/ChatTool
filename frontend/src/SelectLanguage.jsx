@@ -1,11 +1,9 @@
 import { Dropdown, Row} from 'react-bootstrap';
 
-
 const SelectLanguage = ({
     handleSelect,
     selectedValue,
     handleButtonClick
-    
 
 }) => {
     return (

@@ -5,17 +5,19 @@ const BotBob = ({
 }) => {
   const [buttonColor, setButtonColor] = useState('black');
   const [bob, setBob] = useState(true);
+  const [status, setStatus] = useState('Aktiviere');
 
   const handleButtonClick = () => {
     handleClickedBotBob();
     setBob(!bob);
-    console.log('Wert: ' ,bob)
     if (bob == true)
     {
         setButtonColor('green');
+        setStatus('Deaktiviere');
     }
     else{
         setButtonColor('black');
+        setStatus('Aktiviere');
     }
 
   };
@@ -23,7 +25,7 @@ const BotBob = ({
     <button
       style={{ backgroundColor: buttonColor }}
       onClick={handleButtonClick}
-    > Aktiviere Bot Bob
+    > {status} Bot Bob
     </button>
   );
 };

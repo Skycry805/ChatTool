@@ -7,6 +7,7 @@ import Message from './Message.jsx';
 import { sendMessage } from './utils.js';
 import { reciveMessage } from './utils.js';
 import BotBob from './BotBob.jsx';
+import { transformJSON } from './transformJSON.jsx';
 
 
 function App() {
@@ -45,7 +46,6 @@ function App() {
   }
 
   const handleBotBob = () => {
-    console.log('Ich mache etwas');
     setBob(!bob);
   }
 
@@ -62,7 +62,7 @@ function App() {
     };
     const jsonMessage = JSON.stringify(preJsonMessage)
     await sendMessage(jsonMessage);
-    setNewMessages(true)
+    setNewMessages(true);
   };
 
   //Checking for new massages
@@ -73,7 +73,7 @@ function App() {
         let response = await reciveMessage();
         if (response != 'latest')
         {
-          response = transformJSON(response);
+          response = transformJSON(response,language);
           for (const key in response) {
             if (response.hasOwnProperty(key)) {
           setRecivedMessages((prevMessages) => [...prevMessages, response[key]]);
@@ -87,28 +87,10 @@ function App() {
     } 
     []});
 
-    const transformJSON = (json) => {
-      const transformedJSON = {};
-      console.log("Transformed Message:", json)
-      for (const key in json) {
-        if (json.hasOwnProperty(key)) {
-          const item = json[key];
-          const transformedItem = {
-            "message": item.message[language],
-            "sender": item.sender,
-            "sentiment": item.sentiment
-          };
-          transformedJSON[key] = transformedItem;
-        }
-      }
-      console.log("transformed" ,transformedJSON)
-      return transformedJSON;
-    };
-
   return (
     <Container>
       <Row>
-      <div id="window" style={{ marginTop: '20px', border: '1px solid black', padding: '300px' }}>         
+      <div id="window" style={{ marginTop: '20px', border: '1px solid black', padding: '200px' }}>         
           {recivedMessages.map((message, index) => {
             return <Message
             key={index}
@@ -126,7 +108,6 @@ function App() {
               <p id={'username'}>Ihr Name: {sender} </p>
               <p id={'standardLanguage'}>Aktuelle Sprache: {language} </p>
               </Col>
-
             </Row>
             <Row>
             <Col>
@@ -152,8 +133,8 @@ function App() {
               <p id={'selectedLanguage'}>Ihre ausgewählte Sprache: {language} </p>
             </Col>  
               <Col>
-              <p id={'neutral'}>Diese Nachrichten sind neutral </p>
-              <p id={'positiv'}>Diese Nachrichten sind positive</p>
+              <p id={'neutral'}>Diese Nachrichten sind neutral</p>
+              <p id={'positiv'}>Diese Nachrichten sind positiv</p>
               <p id={'negativ'}>Diese Nachrichten sind neagtiv</p>
               </Col>
             </Row>
