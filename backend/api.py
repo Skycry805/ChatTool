@@ -139,8 +139,9 @@ def send_message():
    
 
     if json_data.get('bob'):
+        # Concat name msg
         msg = json_data.get('sender') + ": " + json_data.get('message')
-        answer = ask_bot(json_data.get('message'),json_data.get('language'))
+        answer = ask_bot(msg, json_data.get('language'))
         build_message (answer)
  
     received_message[chat_history.message_id] = json_data
